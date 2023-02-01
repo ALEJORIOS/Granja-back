@@ -14,8 +14,22 @@ const studentSchema = mongoose.Schema({
     lastName: String,
     birthday: String,
     parent: String,
-    contact: String
+    contact: String,
+    group: String,
+    opt: String,
+    membership: Boolean,
+    gender: String
+})
+
+const paramsSchema = mongoose.Schema({
+    name: String,
+    value: {}
 })
 
 const Student = mongoose.model('Estudiante', studentSchema);
-module.exports = Student;
+const Params = mongoose.model('Params', paramsSchema);
+
+module.exports = {
+    Student,
+    Params
+}
