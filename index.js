@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require("body-parser");
-const schemaModule = require('./schemas'); 
+const schemaModule = require('./schemas');
 const Student = schemaModule.Student;
 const Params = schemaModule.Params;
+const Teachers = schemaModule.Teachers;
 var cors = require('cors');
 const { response } = require('express');
 
@@ -19,6 +20,20 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
+app.post('/login', (req, res) => {
+    Teachers.find({ username: req.body.username }, (err, found) => {
+        if (err) {
+            res.send(err);
+        } else {
+            if (found[0].password === req.body.password) {
+                res.status(200).json(found[0]);
+            } else {
+                res.status(401).json({ msg: "Usuario o Contraseña" });
+            }
+        }
+    })
+})
+
 app.get('/estudiante', (req, res) => {
     const addStudent = new Student({
         name: "Alejandro",
@@ -29,7 +44,7 @@ app.get('/estudiante', (req, res) => {
     })
     addStudent.save().then(
         () => {
-            console.log("Registro guardado perfecrtamente")
+            console.log("Registro guardado perfectamente")
             res.send("Registro guardado");
         },
         (err) => console.error(err)
@@ -56,7 +71,7 @@ app.get('/group-ages', (req, res) => {
     })
 })
 
-app.post('/add', async (req, res) => {
+app.post('/add', async(req, res) => {
     const newStudent = new Student({
         name: req.body.name,
         lastName: req.body.lastName,
@@ -85,13 +100,13 @@ app.put('/edit', async(req, res) => {
         membership: req.body.membership,
         gender: req.body.gender
     })
-    await Student.findOneAndUpdate({_id: req.body.id}, editStudent).then((response) => {
+    await Student.findOneAndUpdate({ _id: req.body.id }, editStudent).then((response) => {
         res.send(response);
     })
 })
 
 app.delete('/delete', async(req, res) => {
-    await Student.findOneAndDelete({_id: req.query.id}).then((response) => {
+    await Student.findOneAndDelete({ _id: req.query.id }).then((response) => {
         res.send(response);
     })
 })
