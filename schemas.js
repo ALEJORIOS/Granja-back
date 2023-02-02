@@ -25,10 +25,14 @@ const studentSchema = mongoose.Schema({
 
 const teacherSchema = mongoose.Schema({
     name: String,
+    lastName: String,
     username: String,
     password: String,
     role: String,
-    email: String
+    email: String,
+    gender: String,
+    contact: String,
+    birthday: String
 })
 
 const paramsSchema = mongoose.Schema({
