@@ -32,7 +32,7 @@ app.post('/login', (req, res) => {
         } else {
             if (found[0].password === req.body.password) {
                 const token = jwt.sign({ username: req.body.username, role: found[0].role, name: found[0].name }, process.env.JWT_KEY)
-                res.status(200).json({token});
+                res.status(200).json({ token });
             } else {
                 res.status(401).json({ msg: "Usuario o Contraseña" });
             }
@@ -78,11 +78,21 @@ app.get('/teachers', (req, res) => {
 })
 
 app.get('/group-ages', (req, res) => {
-    Params.find({}, (err, found) => {
+    Params.find({ name: 'groupAges' }, (err, found) => {
         if (err) {
             res.send(err);
         } else {
             res.send(found);
+        }
+    })
+})
+
+app.get('/achievements', (req, res) => {
+    Params.find({ name: 'achievements' }, (err, found) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(found[0].value);
         }
     })
 })
@@ -105,7 +115,6 @@ app.post('/add', async(req, res) => {
 })
 
 app.post('/add-teacher', async(req, res) => {
-    console.log("Creando maestro nuevo");
     const newTeacher = new Teacher({
         name: req.body.name,
         lastName: req.body.lastName,
