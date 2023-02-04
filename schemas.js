@@ -18,9 +18,7 @@ const studentSchema = mongoose.Schema({
     group: String,
     opt: String,
     membership: Boolean,
-    gender: String,
-    username: String,
-    password: String
+    gender: String
 })
 
 const teacherSchema = mongoose.Schema({
@@ -40,12 +38,22 @@ const paramsSchema = mongoose.Schema({
     value: {}
 })
 
+const reportSchema = mongoose.Schema({
+    date: String,
+    service: String,
+    teacher: String,
+    achievements: {}
+
+})
+
 const Student = mongoose.model('Estudiante', studentSchema);
 const Teachers = mongoose.model('Profesores', teacherSchema);
 const Params = mongoose.model('Params', paramsSchema);
+const Reports = mongoose.model('Reports', reportSchema);
 
 module.exports = {
     Student,
     Teachers,
-    Params
+    Params,
+    Reports
 }

@@ -4,6 +4,7 @@ const schemaModule = require('./schemas');
 const Student = schemaModule.Student;
 const Params = schemaModule.Params;
 const Teacher = schemaModule.Teachers;
+const Reports = schemaModule.Reports;
 const jwt = require('jsonwebtoken');
 var cors = require('cors');
 require("dotenv").config();
@@ -12,10 +13,8 @@ const app = express()
 app.use(cors())
 const port = 3000
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
@@ -31,30 +30,13 @@ app.post('/login', (req, res) => {
             res.send(err);
         } else {
             if (found[0].password === req.body.password) {
-                const token = jwt.sign({ username: req.body.username, role: found[0].role, name: found[0].name }, process.env.JWT_KEY)
+                const token = jwt.sign({ username: req.body.username, role: found[0].role, name: found[0].name, id: found[0]._id }, process.env.JWT_KEY)
                 res.status(200).json({ token });
             } else {
                 res.status(401).json({ msg: "Usuario o Contraseña" });
             }
         }
     })
-})
-
-app.get('/estudiante', (req, res) => {
-    const addStudent = new Student({
-        name: "Alejandro",
-        lastName: "Ríos",
-        birthday: "27-01-1997",
-        parent: "Tulia",
-        contact: "3188501911"
-    })
-    addStudent.save().then(
-        () => {
-            console.log("Registro guardado perfectamente")
-            res.send("Registro guardado");
-        },
-        (err) => console.error(err)
-    )
 })
 
 app.get('/students', (req, res) => {
@@ -94,6 +76,52 @@ app.get('/achievements', (req, res) => {
         } else {
             res.send(found[0].value);
         }
+    })
+})
+
+app.get('/reports', (req, res) => {
+    Reports.find({}, (err, found) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(found);
+        }
+    })
+})
+
+app.get('/one-report', (req, res) => {
+    Reports.find({_id: req.query.id}, (err, found) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(found[0]);
+        }
+    })
+})
+
+app.post('/verify-existence-of-report', (req, res) => {
+    Reports.find({
+        date: req.body.date, 
+        service: req.body.service,
+        teacher: req.body.teacher
+    }, (err, found) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(found);
+        }
+    })
+})
+
+app.post('/report', async(req, res) => {
+    const newReport = new Reports({
+        date: req.body.date,
+        service: req.body.service,
+        teacher: req.body.teacher,
+        achievements: req.body.achievements
+    })
+    await newReport.save().then((response) => {
+        res.send(response);
     })
 })
 
@@ -148,6 +176,18 @@ app.put('/edit', async(req, res) => {
     })
 })
 
+app.put('/edit-report', async(req, res) => {
+    const editReport = ({
+        date: req.body.date,
+        service: req.body.service,
+        teacher: req.body.teacher,
+        achievements: req.body.achievements
+    })
+    await Reports.findOneAndUpdate({ _id: req.body.id }, editReport).then((response) => {
+        res.send(response);
+    })
+})
+
 app.put('/edit-teacher', async(req, res) => {
     const editTeacher = ({
         name: req.body.name,
@@ -173,6 +213,12 @@ app.delete('/delete', async(req, res) => {
 
 app.delete('/delete-teacher', async(req, res) => {
     await Teacher.findOneAndDelete({ _id: req.query.id }).then((response) => {
+        res.send(response);
+    })
+})
+
+app.delete('/delete-report', async(req, res) => {
+    await Reports.findOneAndDelete({ _id: req.query.id }).then((response) => {
         res.send(response);
     })
 })
