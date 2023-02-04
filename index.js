@@ -39,6 +39,16 @@ app.post('/login', (req, res) => {
     })
 })
 
+app.get('/icons', (req, res) => {
+    Params.find({ name: "icons" }, (err, found) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(found[0]);
+        }
+    })
+})
+
 app.get('/students', (req, res) => {
     Student.find({}, (err, found) => {
         if (err) {
@@ -90,7 +100,7 @@ app.get('/reports', (req, res) => {
 })
 
 app.get('/one-report', (req, res) => {
-    Reports.find({_id: req.query.id}, (err, found) => {
+    Reports.find({ _id: req.query.id }, (err, found) => {
         if (err) {
             res.send(err);
         } else {
@@ -99,9 +109,10 @@ app.get('/one-report', (req, res) => {
     })
 })
 
+
 app.post('/verify-existence-of-report', (req, res) => {
     Reports.find({
-        date: req.body.date, 
+        date: req.body.date,
         service: req.body.service,
         teacher: req.body.teacher
     }, (err, found) => {
@@ -110,6 +121,16 @@ app.post('/verify-existence-of-report', (req, res) => {
         } else {
             res.send(found);
         }
+    })
+})
+
+app.post('/add-achievement', async(req, res) => {
+    const addAchievement = ({
+        name: 'achievements',
+        value: req.body.value
+    })
+    await Params.findOneAndUpdate({ name: 'achievements' }, addAchievement).then((response) => {
+        res.send(response);
     })
 })
 
@@ -155,6 +176,16 @@ app.post('/add-teacher', async(req, res) => {
         contact: req.body.contact
     })
     await newTeacher.save().then((response) => {
+        res.send(response);
+    })
+})
+
+app.put('/add-achievement', async(req, res) => {
+    const addAchievement = ({
+        name: 'achievements',
+        value: req.body.value
+    })
+    await Params.findOneAndUpdate({ name: 'achievements' }, addAchievement).then((response) => {
         res.send(response);
     })
 })
