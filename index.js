@@ -7,6 +7,7 @@ const Teacher = schemaModule.Teachers;
 const Reports = schemaModule.Reports;
 const jwt = require('jsonwebtoken');
 var cors = require('cors');
+const { response } = require('express');
 require("dotenv").config();
 
 const app = express()
@@ -157,7 +158,8 @@ app.post('/add', async(req, res) => {
         opt: req.body.opt,
         membership: req.body.membership,
         gender: req.body.gender,
-        points: req.body.points
+        points: req.body.points,
+        hedge: req.body.hedge
     })
     await newStudent.save().then((response) => {
         res.send(response);
@@ -202,11 +204,22 @@ app.put('/edit', async(req, res) => {
         opt: req.body.opt,
         membership: req.body.membership,
         gender: req.body.gender,
-        points: req.body.points
+        points: req.body.points,
+        hedge: req.body.hedge
     })
     await Student.findOneAndUpdate({ _id: req.body.id }, editStudent).then((response) => {
         res.send(response);
     })
+})
+
+app.put('/rate-students', async(req, res) => {
+    await req.body.rate.forEach(async(std) => {
+        const points = ({
+            points: std.points
+        })
+        await Student.findOneAndUpdate({ _id: std.id}, points).then();
+    })
+    res.status(200).json({msg: "success"});
 })
 
 app.put('/edit-report', async(req, res) => {
