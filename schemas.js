@@ -18,7 +18,8 @@ const studentSchema = mongoose.Schema({
     group: String,
     opt: String,
     membership: Boolean,
-    gender: String
+    gender: String,
+    points: Number
 })
 
 const teacherSchema = mongoose.Schema({

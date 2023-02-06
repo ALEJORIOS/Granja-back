@@ -156,7 +156,8 @@ app.post('/add', async(req, res) => {
         group: req.body.group,
         opt: req.body.opt,
         membership: req.body.membership,
-        gender: req.body.gender
+        gender: req.body.gender,
+        points: req.body.points
     })
     await newStudent.save().then((response) => {
         res.send(response);
@@ -200,7 +201,8 @@ app.put('/edit', async(req, res) => {
         group: req.body.group,
         opt: req.body.opt,
         membership: req.body.membership,
-        gender: req.body.gender
+        gender: req.body.gender,
+        points: req.body.points
     })
     await Student.findOneAndUpdate({ _id: req.body.id }, editStudent).then((response) => {
         res.send(response);
