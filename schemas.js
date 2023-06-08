@@ -44,8 +44,8 @@ const reportSchema = mongoose.Schema({
     date: String,
     service: String,
     teacher: String,
-    achievements: {}
-
+    achievements: {},
+    lastRecord: Array
 })
 
 const Student = mongoose.model('Estudiante', studentSchema);
