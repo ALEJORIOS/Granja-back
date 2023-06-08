@@ -212,14 +212,20 @@ app.put('/edit', async(req, res) => {
     })
 })
 
+app.put('/reset', async(req, res) => {
+    await Student.updateMany({}, { points: 0 }).then((response) => {
+        res.send(response);
+    })
+})
+
 app.put('/rate-students', async(req, res) => {
     await req.body.rate.forEach(async(std) => {
         const points = ({
             points: std.points
         })
-        await Student.findOneAndUpdate({ _id: std.id}, points).then();
+        await Student.findOneAndUpdate({ _id: std.id }, points).then();
     })
-    res.status(200).json({msg: "success"});
+    res.status(200).json({ msg: "success" });
 })
 
 app.put('/edit-report', async(req, res) => {
