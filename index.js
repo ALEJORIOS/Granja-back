@@ -140,7 +140,8 @@ app.post('/report', async(req, res) => {
         date: req.body.date,
         service: req.body.service,
         teacher: req.body.teacher,
-        achievements: req.body.achievements
+        achievements: req.body.achievements,
+        lastRecord: req.body.lastRecord
     })
     await newReport.save().then((response) => {
         res.send(response);
