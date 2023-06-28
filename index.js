@@ -91,7 +91,7 @@ app.get('/achievements', (req, res) => {
 })
 
 app.get('/reports', (req, res) => {
-    Reports.find({}, (err, found) => {
+    Reports.find({ visible: true }, (err, found) => {
         if (err) {
             res.send(err);
         } else {
@@ -141,7 +141,8 @@ app.post('/report', async(req, res) => {
         service: req.body.service,
         teacher: req.body.teacher,
         achievements: req.body.achievements,
-        lastRecord: req.body.lastRecord
+        lastRecord: req.body.lastRecord,
+        visible: true
     })
     await newReport.save().then((response) => {
         res.send(response);
@@ -271,7 +272,7 @@ app.delete('/delete-teacher', async(req, res) => {
 })
 
 app.delete('/delete-report', async(req, res) => {
-    await Reports.findOneAndDelete({ _id: req.query.id }).then((response) => {
+    await Reports.findOneAndUpdate({ _id: req.query.id }, { visible: false }).then((response) => {
         res.send(response);
     })
 })
