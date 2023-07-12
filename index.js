@@ -221,13 +221,17 @@ app.put('/reset', async(req, res) => {
 })
 
 app.put('/rate-students', async(req, res) => {
-    await req.body.rate.forEach(async(std) => {
+    const responses = [];
+    await req.body.rate.forEach(async(std, index) => {
         const points = ({
             points: std.points
         })
-        await Student.findOneAndUpdate({ _id: std.id }, points).then();
+        const response = await Student.findOneAndUpdate({ _id: std.id }, points);
+        responses.push(response);
+        if (req.body.rate.length - 1 === index) {
+            res.status(200).json({ msg: "success", responses });
+        }
     })
-    res.status(200).json({ msg: "success" });
 })
 
 app.put('/edit-report', async(req, res) => {
@@ -272,7 +276,7 @@ app.delete('/delete-teacher', async(req, res) => {
 })
 
 app.delete('/delete-report', async(req, res) => {
-    await Reports.findOneAndUpdate({ _id: req.query.id }, { visible: false }).then((response) => {
+    await Reports.findOneAndUpdate({ _id: req.query.id }, { visible: false, service: "hide" }).then((response) => {
         res.send(response);
     })
 })
